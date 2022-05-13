@@ -1,0 +1,10 @@
+const express = require("express");
+const router = express.Router();
+const userController = require("../controller/user");
+router.post("/signup", userController.signUpWithEmailAndPassword);
+router.post("/login", userController.logInWithEmailAndPassword);
+router.post("/signupwithfb", userController.signUpWithFacebook);
+router.post("/loginwithfb", userController.logInWithFacebook);
+router.post("/signupwithgoogle", userController.signUpWithGoogle);
+router.post("/loginwithgoogle", userController.logInWithGoogle);
+module.exports = router;
