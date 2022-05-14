@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 exports.signUpWithEmailAndPassword = async (req, res, next) => {
     User.findOne({ email: req.body.email }, function (err, user) {
         if (user != null) {
-            return res.status(400).json({ message: "user already exists" });
+            return res.status(400).json({ message: "user-already-exists" });
         } else {
             let newUser = new User();
             newUser.userName = req.body.username;
@@ -14,7 +14,7 @@ exports.signUpWithEmailAndPassword = async (req, res, next) => {
             newUser.save((err, u) => {
                 if (err) {
                     return res.status(400).json({
-                        message: "Failed to add user."
+                        message: "general-error"
                     });
                 }
                 else {
@@ -34,8 +34,8 @@ exports.signUpWithEmailAndPassword = async (req, res, next) => {
 exports.logInWithEmailAndPassword = async (req, res, next) => {
     User.findOne({ email: req.body.email }, function (err, user) {
         if (user === null) {
-            return res.status(400).send({
-                message: "User not found."
+            return res.status(400).json({
+                message: "wrong-credentials"
             });
         }
         else {
@@ -43,15 +43,15 @@ exports.logInWithEmailAndPassword = async (req, res, next) => {
                 const token = jwt.sign({
                     id: user._id.toString(),
                 }, process.env.JWT_SECRET);
-                return res.status(200).send({
+                return res.status(200).json({
                     message: "User Logged In",
                     token: token,
                     username: user.userName,
                 });
             }
             else {
-                return res.status(400).send({
-                    message: "Wrong Password"
+                return res.status(400).json({
+                    message: "wrong-credentials"
                 });
             }
         }
@@ -60,7 +60,7 @@ exports.logInWithEmailAndPassword = async (req, res, next) => {
 exports.signUpWithFacebook = async (req, res, next) => {
     User.findOne({ facebookId: req.body.facebookId }, function (err, user) {
         if (user != null) {
-            return res.status(400).json({ message: "user already exists" });
+            return res.status(400).json({ message: "user-already-exists" });
         } else {
             User.findOneAndUpdate({ email: req.body.email }, { $set: { "facebookId": req.body.facebookId }, },
                 function (err, doc) {
@@ -76,7 +76,7 @@ exports.signUpWithFacebook = async (req, res, next) => {
                             return newUser.save((err, u) => {
                                 if (err) {
                                     return res.status(400).json({
-                                        message: "Failed to add user."
+                                        message: "general-error"
                                     });
                                 }
                                 else {
@@ -109,15 +109,15 @@ exports.signUpWithFacebook = async (req, res, next) => {
 exports.logInWithFacebook = async (req, res, next) => {
     User.findOne({ facebookId: req.body.facebookId }, function (err, user) {
         if (user === null) {
-            return res.status(400).send({
-                message: "User not found."
+            return res.status(400).json({
+                message: "user-not-found"
             });
         }
         else {
             const token = jwt.sign({
                 id: user._id.toString(),
             }, process.env.JWT_SECRET);
-            return res.status(200).send({
+            return res.status(200).json({
                 message: "User Logged In",
                 token: token,
                 username: user.userName,
@@ -128,7 +128,7 @@ exports.logInWithFacebook = async (req, res, next) => {
 exports.signUpWithGoogle = async (req, res, next) => {
     User.findOne({ googleId: req.body.googleId }, function (err, user) {
         if (user != null) {
-            return res.status(400).json({ message: "user already exists" });
+            return res.status(400).json({ message: "user-already-exists" });
         } else {
             User.findOneAndUpdate({ email: req.body.email }, { $set: { "googleId": req.body.googleId }, },
                 function (err, doc) {
@@ -144,7 +144,7 @@ exports.signUpWithGoogle = async (req, res, next) => {
                             return newUser.save((err, u) => {
                                 if (err) {
                                     return res.status(400).json({
-                                        message: "Failed to add user."
+                                        message: "general-error"
                                     });
                                 }
                                 else {
@@ -177,15 +177,15 @@ exports.signUpWithGoogle = async (req, res, next) => {
 exports.logInWithGoogle = async (req, res, next) => {
     User.findOne({ googleId: req.body.googleId }, function (err, user) {
         if (user === null) {
-            return res.status(400).send({
-                message: "User not found."
+            return res.status(400).json({
+                message: "user-not-found"
             });
         }
         else {
             const token = jwt.sign({
                 id: user._id.toString(),
             }, process.env.JWT_SECRET);
-            return res.status(200).send({
+            return res.status(200).json({
                 message: "User Logged In",
                 token: token,
                 username: user.userName,
